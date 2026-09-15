@@ -1,0 +1,66 @@
+name: 每小時更新台電資料
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: collect-taiwan-power-data
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 取得網站檔案
+        uses: actions/checkout@v4
+
+      - name: 使用 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: 抓取台電最新資料
+        run: node scripts/collect-power.mjs
+
+      - name: 保存新觀測資料
+        shell: bash
+        run: |
+          if git diff --quiet -- data; then
+            echo "台電觀測時間未改變，沒有需要提交的資料。"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git commit -m "data: 更新台電每小時觀測"
+          git push
+
+      - name: 準備靜態網站
+        shell: bash
+        run: |
+          mkdir -p _site
+          cp index.html .nojekyll _site/
+          cp -R data _site/data
+
+      - name: 設定 GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: 上傳網站內容
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: 發布 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
