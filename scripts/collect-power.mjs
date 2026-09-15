@@ -22,7 +22,11 @@ function parseTaipeiDate(value) {
   return date;
 }
 
-async function fetchJson(url) {
+function delay(ms) {
+  return new Promise((resolvePromise) => setTimeout(resolvePromise, ms));
+}
+
+async function fetchJsonOnce(url) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 20_000);
   try {
@@ -38,6 +42,25 @@ async function fetchJson(url) {
   } finally {
     clearTimeout(timer);
   }
+}
+
+// 同一次執行內最多嘗試 3 次（第 1 次 + 重試 2 次），中間分別等待 3 秒、8 秒，
+// 用來吸收台電伺服器偶發的連線逾時；3 次都失敗才真的放棄，不寫入任何猜測值。
+async function fetchJson(url) {
+  const waits = [3_000, 8_000];
+  let lastError;
+  for (let attempt = 0; attempt <= waits.length; attempt += 1) {
+    try {
+      return await fetchJsonOnce(url);
+    } catch (error) {
+      lastError = error;
+      const isLastAttempt = attempt === waits.length;
+      console.warn(`抓取失敗（第 ${attempt + 1} 次）：${url} → ${error?.message || error}`);
+      if (isLastAttempt) break;
+      await delay(waits[attempt]);
+    }
+  }
+  throw lastError;
 }
 
 function buildSnapshot(supplyData, generationData) {
