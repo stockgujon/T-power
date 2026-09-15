@@ -2,19 +2,19 @@
   "status": "official",
   "source": "台灣電力公司政府資料開放平臺",
   "schedule": "GitHub Actions 每小時自動存檔",
-  "generatedAt": "2026-09-15T11:26:45.292Z",
+  "generatedAt": "2026-09-15T12:32:16.838Z",
   "latest": {
-    "observedAt": "2026-09-15T11:20:00.000Z",
-    "sourceUpdatedAt": "2026-09-15T19:20:00",
-    "collectedAt": "2026-09-15T11:26:45.250Z",
-    "loadMw": 33908,
-    "generationMw": 33908,
-    "gasMw": 19410,
-    "coalMw": 6555,
+    "observedAt": "2026-09-15T12:20:00.000Z",
+    "sourceUpdatedAt": "2026-09-15T20:20:00",
+    "collectedAt": "2026-09-15T12:32:16.538Z",
+    "loadMw": 33168,
+    "generationMw": 33194,
+    "gasMw": 19354,
+    "coalMw": 6300,
     "solarMw": 0,
-    "windMw": 3777,
-    "hydroMw": 653,
-    "otherMw": 3514,
+    "windMw": 3949,
+    "hydroMw": 611,
+    "otherMw": 2981,
     "capacityMw": 48182
   },
   "snapshots": [
@@ -156,6 +156,20 @@
       "windMw": 3777,
       "hydroMw": 653,
       "otherMw": 3514,
+      "capacityMw": 48182
+    },
+    {
+      "observedAt": "2026-09-15T12:20:00.000Z",
+      "sourceUpdatedAt": "2026-09-15T20:20:00",
+      "collectedAt": "2026-09-15T12:32:16.538Z",
+      "loadMw": 33168,
+      "generationMw": 33194,
+      "gasMw": 19354,
+      "coalMw": 6300,
+      "solarMw": 0,
+      "windMw": 3949,
+      "hydroMw": 611,
+      "otherMw": 2981,
       "capacityMw": 48182
     }
   ]
