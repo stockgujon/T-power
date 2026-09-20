@@ -1400,7 +1400,21 @@
       "hydroMw": 387,
       "otherMw": 944,
       "capacityMw": 36212
+    },
+    {
+      "observedAt": "2026-09-20T08:20:00.000Z",
+      "sourceUpdatedAt": "2026-09-20T16:20:00",
+      "collectedAt": "2026-09-20T08:26:33.712Z",
+      "loadMw": 31640,
+      "generationMw": 31878,
+      "gasMw": 18830,
+      "coalMw": 5279,
+      "solarMw": 3202,
+      "windMw": 2922,
+      "hydroMw": 644,
+      "otherMw": 1001,
+      "capacityMw": 36212
     }
   ],
-  "generatedAt": "2026-09-20T06:30:16.046Z"
+  "generatedAt": "2026-09-20T08:26:34.077Z"
 }
