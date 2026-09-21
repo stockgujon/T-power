@@ -2,19 +2,19 @@
   "status": "official",
   "source": "台灣電力公司政府資料開放平臺",
   "schedule": "GitHub Actions 每小時自動存檔",
-  "generatedAt": "2026-09-21T15:25:02.229Z",
+  "generatedAt": "2026-09-21T16:27:49.795Z",
   "latest": {
-    "observedAt": "2026-09-21T15:10:00.000Z",
-    "sourceUpdatedAt": "2026-09-21T23:10:00",
-    "collectedAt": "2026-09-21T15:25:01.893Z",
-    "loadMw": 30145,
-    "generationMw": 30164,
-    "gasMw": 18469,
-    "coalMw": 5315,
+    "observedAt": "2026-09-21T16:20:00.000Z",
+    "sourceUpdatedAt": "2026-09-22T00:20:00",
+    "collectedAt": "2026-09-21T16:27:49.447Z",
+    "loadMw": 29099,
+    "generationMw": 29114,
+    "gasMw": 18064,
+    "coalMw": 5123,
     "solarMw": 0,
-    "windMw": 2838,
-    "hydroMw": 757,
-    "otherMw": 2786,
-    "capacityMw": 46274
+    "windMw": 2786,
+    "hydroMw": 761,
+    "otherMw": 2380,
+    "capacityMw": 44180
   }
 }
