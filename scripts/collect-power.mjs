@@ -88,6 +88,14 @@ function buildSnapshot(supplyData, generationData) {
   const load = numeric(supply.curr_load) * 10;
   const capacity = numeric(supply.real_hr_maxi_sply_capacity || forecast.fore_maxi_sply_capacity) * 10;
 
+  // 台電官方已算好的「今日預估尖峰備轉容量率」與 G/Y/O/R/B 燈號，直接採用官方數字，
+  // 不用即時負載去對比 real_hr_maxi_sply_capacity 自行推算——那個欄位是「今天目前為止
+  // 出現過的尖峰供電能力」，跟即時負載不同一個時間點，自算會失真（尤其晚間容易偏樂觀）。
+  const reserveRate = numeric(forecast.fore_peak_resv_rate);
+  const reserveIndicator = String(forecast.fore_peak_resv_indicator || "").trim().toUpperCase();
+  const reservePeakHourRange = String(forecast.fore_peak_hour_range || "").trim();
+  const utilRate = numeric(supply.curr_util_rate);
+
   if (!load || !generation || unitRows.length < 2) throw new Error("台電資料格式不完整");
 
   return {
@@ -103,6 +111,10 @@ function buildSnapshot(supplyData, generationData) {
     hydroMw: Math.round(hydro),
     otherMw: Math.round(other),
     capacityMw: Math.round(capacity),
+    reserveRatePct: Math.round(reserveRate * 100) / 100,
+    reserveIndicator: /^[GYORB]$/.test(reserveIndicator) ? reserveIndicator : "",
+    reservePeakHourRange,
+    utilRatePct: Math.round(utilRate * 10) / 10,
   };
 }
 
