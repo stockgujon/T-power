@@ -30,7 +30,7 @@ jobs:
       - name: 保存新資料
         shell: bash
         run: |
-          if git diff --quiet -- data/counties.json; then
+          if [ -z "$(git status --porcelain -- data/counties.json)" ]; then
             echo "縣市用電資料月份未改變，沒有需要提交的資料。"
             exit 0
           fi
