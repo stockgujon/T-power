@@ -67,6 +67,7 @@ function buildSnapshot(supplyData, generationData) {
   const supplyRows = Array.isArray(supplyData?.records) ? supplyData.records : [];
   const supply = supplyRows[0] || {};
   const forecast = supplyRows[1] || supply;
+  const yesterday = supplyRows[2] || {};
   const unitRows = Array.isArray(generationData?.aaData) ? generationData.aaData : [];
   const totals = new Map();
 
@@ -95,6 +96,8 @@ function buildSnapshot(supplyData, generationData) {
   const reserveIndicator = String(forecast.fore_peak_resv_indicator || "").trim().toUpperCase();
   const reservePeakHourRange = String(forecast.fore_peak_hour_range || "").trim();
   const utilRate = numeric(supply.curr_util_rate);
+  const yesterdayReserveRate = numeric(yesterday.yday_peak_resv_rate);
+  const yesterdayReserveIndicator = String(yesterday.yday_peak_resv_indicator || "").trim().toUpperCase();
 
   if (!load || !generation || unitRows.length < 2) throw new Error("台電資料格式不完整");
 
@@ -115,6 +118,8 @@ function buildSnapshot(supplyData, generationData) {
     reserveIndicator: /^[GYORB]$/.test(reserveIndicator) ? reserveIndicator : "",
     reservePeakHourRange,
     utilRatePct: Math.round(utilRate * 10) / 10,
+    yesterdayReserveRatePct: Math.round(yesterdayReserveRate * 100) / 100,
+    yesterdayReserveIndicator: /^[GYORB]$/.test(yesterdayReserveIndicator) ? yesterdayReserveIndicator : "",
   };
 }
 
