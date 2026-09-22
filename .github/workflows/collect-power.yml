@@ -30,7 +30,7 @@ jobs:
       - name: 保存新觀測資料
         shell: bash
         run: |
-          if git diff --quiet -- data; then
+          if [ -z "$(git status --porcelain -- data)" ]; then
             echo "台電觀測時間未改變，沒有需要提交的資料。"
             exit 0
           fi
