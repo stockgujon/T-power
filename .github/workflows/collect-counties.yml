@@ -1,0 +1,75 @@
+name: 每日檢查縣市用電資料
+
+on:
+  schedule:
+    - cron: "40 1 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: collect-taiwan-power-counties
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: 取得網站檔案
+        uses: actions/checkout@v4
+
+      - name: 使用 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: 抓取縣市用電資料
+        run: node scripts/collect-counties.mjs
+
+      - name: 保存新資料
+        shell: bash
+        run: |
+          if git diff --quiet -- data/counties.json; then
+            echo "縣市用電資料月份未改變，沒有需要提交的資料。"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/counties.json
+          git commit -m "data: 更新縣市用電資料"
+          git push
+
+  deploy:
+    needs: collect
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 取得最新網站檔案
+        uses: actions/checkout@v4
+
+      - name: 準備靜態網站
+        shell: bash
+        run: |
+          mkdir -p _site
+          cp index.html .nojekyll _site/
+          cp -R data _site/data
+
+      - name: 設定 GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: 上傳網站內容
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: 發布 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
