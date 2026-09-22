@@ -46,10 +46,17 @@ async function fetchBuffer(url) {
   throw lastError;
 }
 
-// 台電這份 CSV 是 Big5 編碼（不是網頁常見的 UTF-8），且有些數字欄位帶千分位逗號、
-// 有些沒有，格式本身不一致，需要個別處理，不能直接當純數字解析。
-function decodeBig5(buffer) {
-  return new TextDecoder("big5").decode(buffer);
+// 台電這份 CSV 的編碼實際測試下來會變，不能寫死假設某一種。做法是先用嚴格模式
+// 試解成 UTF-8：如果原始資料真的是合法 UTF-8，嚴格解碼一定會成功；如果不是（丟出
+// 錯誤），才改用 Big5。這樣不管台電哪天換了編碼，程式都能自動判斷，不用用猜的。
+function decodeCsv(buffer) {
+  try {
+    const text = new TextDecoder("utf-8", { fatal: true }).decode(buffer);
+    return { text: text.replace(/^\uFEFF/, ""), encoding: "utf-8" };
+  } catch (utf8Error) {
+    const text = new TextDecoder("big5").decode(buffer);
+    return { text, encoding: "big5" };
+  }
 }
 
 function parseCsv(text) {
@@ -111,7 +118,7 @@ function rocMonthToIso(yyyymm) {
   return `${year}-${month}`;
 }
 
-function buildCountyData(csvText) {
+function buildCountyData(csvText, encoding) {
   const rows = parseCsv(csvText);
   if (!rows.length) throw new Error("縣市用電資料格式不完整：沒有任何列");
   const header = rows[0].map((cell) => cell.trim());
@@ -122,7 +129,7 @@ function buildCountyData(csvText) {
     value: header.indexOf("售電量(度)"),
   };
   if (idx.month < 0 || idx.county < 0 || idx.category < 0 || idx.value < 0) {
-    throw new Error(`縣市用電資料欄位對不上，實際欄位：${header.join("、")}`);
+    throw new Error(`縣市用電資料欄位對不上（判斷編碼：${encoding}），實際欄位：${header.join("、")}`);
   }
 
   const dataRows = rows.slice(1).filter((row) => row.length >= header.length && row[idx.month]);
@@ -163,8 +170,9 @@ async function writeJson(path, value) {
 }
 
 const buffer = await fetchBuffer(COUNTY_URL);
-const csvText = decodeBig5(buffer);
-const parsed = buildCountyData(csvText);
+const { text: csvText, encoding } = decodeCsv(buffer);
+console.log(`判斷編碼：${encoding}`);
+const parsed = buildCountyData(csvText, encoding);
 
 await writeJson(resolve(DATA_DIR, "counties.json"), {
   status: "official",
