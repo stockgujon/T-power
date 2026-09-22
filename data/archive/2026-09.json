@@ -1950,7 +1950,25 @@
       "reserveIndicator": "G",
       "reservePeakHourRange": "13:00-15:00",
       "utilRatePct": 82
+    },
+    {
+      "observedAt": "2026-09-22T14:20:00.000Z",
+      "sourceUpdatedAt": "2026-09-22T22:20:00",
+      "collectedAt": "2026-09-22T14:27:21.354Z",
+      "loadMw": 31535,
+      "generationMw": 31554,
+      "gasMw": 20990,
+      "coalMw": 4975,
+      "solarMw": 0,
+      "windMw": 1452,
+      "hydroMw": 1235,
+      "otherMw": 2902,
+      "capacityMw": 46507,
+      "reserveRatePct": 26.17,
+      "reserveIndicator": "G",
+      "reservePeakHourRange": "13:00-15:00",
+      "utilRatePct": 82
     }
   ],
-  "generatedAt": "2026-09-22T13:47:36.139Z"
+  "generatedAt": "2026-09-22T14:27:21.389Z"
 }
