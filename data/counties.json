@@ -2,7 +2,7 @@
   "status": "official",
   "source": "台灣電力公司政府資料開放平臺－各縣市住宅、服務業及機關用電統計資料",
   "schedule": "GitHub Actions 每日檢查，資料本身依台電公告每月更新一次",
-  "generatedAt": "2026-09-23T01:44:13.303Z",
+  "generatedAt": "2026-09-25T01:43:47.112Z",
   "dataMonth": "2026-08",
   "categories": [
     "住宅",
