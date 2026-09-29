@@ -1,12 +1,13 @@
 {
   "status": "official",
   "source": "台灣電力公司政府資料開放平臺",
-  "schedule": "GitHub Actions 每小時自動存檔",
-  "generatedAt": "2026-09-29T10:53:14.318Z",
+  "schedule": "GitHub Actions 每日 13:17、20:17 自動存檔",
+  "generatedAt": "2026-09-29T13:09:23.233Z",
   "latest": {
     "observedAt": "2026-09-29T07:30:00.000Z",
     "sourceUpdatedAt": "2026-09-29T15:30:00",
-    "collectedAt": "2026-09-29T10:53:14.031Z",
+    "collectedAt": "2026-09-29T13:09:23.014Z",
+    "slot": null,
     "loadMw": 39125,
     "generationMw": 39134,
     "gasMw": 21861,
