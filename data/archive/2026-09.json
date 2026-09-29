@@ -3412,7 +3412,7 @@
     {
       "observedAt": "2026-09-29T07:30:00.000Z",
       "sourceUpdatedAt": "2026-09-29T15:30:00",
-      "collectedAt": "2026-09-29T13:23:09.076Z",
+      "collectedAt": "2026-09-29T13:40:42.629Z",
       "slot": null,
       "loadMw": 39125,
       "generationMw": 39134,
@@ -3431,5 +3431,5 @@
       "yesterdayReserveIndicator": "G"
     }
   ],
-  "generatedAt": "2026-09-29T13:23:09.400Z"
+  "generatedAt": "2026-09-29T13:40:42.672Z"
 }
