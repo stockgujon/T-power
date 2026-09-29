@@ -63,6 +63,25 @@ async function fetchJson(url) {
   throw lastError;
 }
 
+// 一天每個時段排 4 個時間點（間隔 10 分鐘），當作備援：只要其中一次成功抓到，
+// 當天這個時段就算完成。GitHub 會用 github.event.schedule 回報是哪一條 cron
+// 觸發的，一次比對整組合併的 cron 字串即可，不用四條規則各自判斷。
+function resolveSlot() {
+  const cronExpr = String(process.env.GITHUB_EVENT_SCHEDULE || "").trim();
+  if (cronExpr === "17,27,37,47 5 * * *") return "afternoon";
+  if (cronExpr === "17,27,37,47 12 * * *") return "evening";
+  return null;
+}
+
+function taipeiDay(date) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Taipei", year: "numeric", month: "2-digit", day: "2-digit",
+  }).formatToParts(date);
+  const map = {};
+  parts.forEach((part) => { map[part.type] = part.value; });
+  return `${map.year}-${map.month}-${map.day}`;
+}
+
 function buildSnapshot(supplyData, generationData) {
   const supplyRows = Array.isArray(supplyData?.records) ? supplyData.records : [];
   const supply = supplyRows[0] || {};
@@ -105,6 +124,7 @@ function buildSnapshot(supplyData, generationData) {
     observedAt: observed.toISOString(),
     sourceUpdatedAt: String(generationData?.DateTime || supply.publish_time || ""),
     collectedAt: new Date().toISOString(),
+    slot: resolveSlot(),
     loadMw: Math.round(load),
     generationMw: Math.round(generation),
     gasMw: Math.round(gas),
@@ -153,6 +173,21 @@ function mergeSnapshots(existing, next) {
   return Array.from(byTime.values()).sort((a, b) => new Date(a.observedAt) - new Date(b.observedAt));
 }
 
+const slot = resolveSlot();
+const recentPath = resolve(DATA_DIR, "recent.json");
+const recent = await readJson(recentPath, { snapshots: [] });
+
+if (slot) {
+  const today = taipeiDay(new Date());
+  const alreadyHasToday = (recent.snapshots || []).some(
+    (row) => row.slot === slot && taipeiDay(new Date(row.observedAt)) === today
+  );
+  if (alreadyHasToday) {
+    console.log(`今天的 ${slot === "afternoon" ? "13:17" : "20:17"} 時段已經成功抓過資料，這次備援排程跳過，不重複抓取。`);
+    process.exit(0);
+  }
+}
+
 const [supplyData, generationData] = await Promise.all([fetchJson(SUPPLY_URL), fetchJson(GENERATION_URL)]);
 const snapshot = buildSnapshot(supplyData, generationData);
 const month = taipeiMonth(new Date(snapshot.observedAt));
@@ -162,8 +197,6 @@ archive.generatedAt = new Date().toISOString();
 archive.snapshots = mergeSnapshots(archive.snapshots || [], snapshot);
 await writeJson(archivePath, archive);
 
-const recentPath = resolve(DATA_DIR, "recent.json");
-const recent = await readJson(recentPath, { snapshots: [] });
 const cutoff = Date.now() - RETAIN_DAYS * 86_400_000;
 const snapshots = mergeSnapshots(recent.snapshots || [], snapshot)
   .filter((row) => new Date(row.observedAt).getTime() >= cutoff);
@@ -171,7 +204,7 @@ const snapshots = mergeSnapshots(recent.snapshots || [], snapshot)
 await writeJson(recentPath, {
   status: "official",
   source: "台灣電力公司政府資料開放平臺",
-  schedule: "GitHub Actions 每小時自動存檔",
+  schedule: "GitHub Actions 每日 13:17、20:17 自動存檔",
   generatedAt: new Date().toISOString(),
   latest: snapshot,
   snapshots,
@@ -180,9 +213,9 @@ await writeJson(recentPath, {
 await writeJson(resolve(DATA_DIR, "latest.json"), {
   status: "official",
   source: "台灣電力公司政府資料開放平臺",
-  schedule: "GitHub Actions 每小時自動存檔",
+  schedule: "GitHub Actions 每日 13:17、20:17 自動存檔",
   generatedAt: new Date().toISOString(),
   latest: snapshot,
 });
 
-console.log(`已保存 ${snapshot.sourceUpdatedAt} 台電資料；最近資料共 ${snapshots.length} 筆。`);
+console.log(`已保存 ${snapshot.sourceUpdatedAt} 台電資料（時段：${snapshot.slot || "手動觸發，未標記時段"}）；最近資料共 ${snapshots.length} 筆。`);
