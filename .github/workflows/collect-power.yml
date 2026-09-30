@@ -2,6 +2,7 @@ name: 每日兩次更新台電資料
 
 on:
   schedule:
+    - cron: "0 2 * * *"
     - cron: "17,27,37,47 5 * * *"
     - cron: "17,27,37,47 12 * * *"
   workflow_dispatch:
