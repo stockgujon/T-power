@@ -25,7 +25,7 @@
     {
       "observedAt": "2026-10-01T03:10:00.000Z",
       "sourceUpdatedAt": "2026-10-01T11:10:00",
-      "collectedAt": "2026-10-01T03:18:05.218Z",
+      "collectedAt": "2026-10-01T03:19:58.604Z",
       "slot": null,
       "loadMw": 39028,
       "generationMw": 39538,
@@ -44,5 +44,5 @@
       "yesterdayReserveIndicator": "G"
     }
   ],
-  "generatedAt": "2026-10-01T03:18:05.249Z"
+  "generatedAt": "2026-10-01T03:19:58.636Z"
 }
