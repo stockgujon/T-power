@@ -2,10 +2,14 @@ name: 每日多次更新台電資料
 
 on:
   schedule:
-    - cron: "17,37 0 * * *"
-    - cron: "17,37 6 * * *"
-    - cron: "17,37 12 * * *"
-    - cron: "17,37 18 * * *"
+    - cron: "17 0 * * *"
+    - cron: "37 0 * * *"
+    - cron: "17 6 * * *"
+    - cron: "37 6 * * *"
+    - cron: "17 12 * * *"
+    - cron: "37 12 * * *"
+    - cron: "17 18 * * *"
+    - cron: "37 18 * * *"
   workflow_dispatch:
 
 concurrency:
