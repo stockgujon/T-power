@@ -842,7 +842,27 @@
       "utilRatePct": 79,
       "yesterdayReserveRatePct": 16.79,
       "yesterdayReserveIndicator": "G"
+    },
+    {
+      "observedAt": "2026-10-09T18:20:00.000Z",
+      "sourceUpdatedAt": "2026-10-10T02:20:00",
+      "collectedAt": "2026-10-09T18:28:51.663Z",
+      "loadMw": 25387,
+      "generationMw": 25407,
+      "gasMw": 13069,
+      "coalMw": 6999,
+      "solarMw": 0,
+      "windMw": 3184,
+      "hydroMw": 435,
+      "otherMw": 1720,
+      "capacityMw": 34820,
+      "reserveRatePct": 11.96,
+      "reserveIndicator": "G",
+      "reservePeakHourRange": "13:00-16:00",
+      "utilRatePct": 70,
+      "yesterdayReserveRatePct": 16.79,
+      "yesterdayReserveIndicator": "G"
     }
   ],
-  "generatedAt": "2026-10-09T14:34:03.029Z"
+  "generatedAt": "2026-10-09T18:28:51.691Z"
 }
