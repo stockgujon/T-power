@@ -1146,7 +1146,7 @@
     {
       "observedAt": "2026-10-12T21:10:00.000Z",
       "sourceUpdatedAt": "2026-10-13T05:10:00",
-      "collectedAt": "2026-10-12T21:16:42.970Z",
+      "collectedAt": "2026-10-12T21:22:51.078Z",
       "loadMw": 26012,
       "generationMw": 27566,
       "gasMw": 17176,
@@ -1164,5 +1164,5 @@
       "yesterdayReserveIndicator": "G"
     }
   ],
-  "generatedAt": "2026-10-12T21:16:42.995Z"
+  "generatedAt": "2026-10-12T21:22:51.130Z"
 }
